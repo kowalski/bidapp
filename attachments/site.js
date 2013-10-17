@@ -18,44 +18,9 @@ bidapp.showDocID = function() {
 
 
 bidapp.showBidding = function(handDoc) {
-    $.Mustache.load('./templates/auction.html')
-        .done(function() {
-            console.log('done showbidd', handDoc);
-            var doc = handDoc || new docs.HandDoc();
-            var auction = $('#main-container')
-                .empty()
-                .mustache("auction-template");
-            var input = new bidding.InputWidget(
-                auction.find('.bidding-input'),
-                doc.auction);
-
-            var widget = new bidding.AuctionWidget(auction.find('#auction'));
-
-            $('.bidding-input')
-                .bind('bidding.changed', function(ev) {
-                    widget.draw(input.value); })
-                .trigger('bidding.changed');
-
-            auction.find('button[name="save"]').bind('click', function() {
-                var value = input.value;
-                if (!value.elements.length) {
-                    input.markInvalid();
-                    return;
-                }
-                input.markValid();
-                doc.auction = value;
-
-                bidapp.db.saveDoc(doc, {
-                    success: function(data) {
-                        doc._id = data.id;
-                        doc._rev = data.rev;
-                        bidapp.showBidding(doc);
-                    }
-                });
-            });
-        });
+    var view = new views.ShowBidding(handDoc);
+    view.render($('#main-container'));
 };
-
 
 bidapp.newBid = function () {
     bidapp.showBidding();
