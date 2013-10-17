@@ -1,0 +1,35 @@
+body {
+    padding: 20px;
+    background: #f5f5f5;
+}
+
+div#main-container {
+    margin:auto;
+    max-width: 1000px;
+    background: white;
+    padding: 10px;
+}
+
+input[type=text] {
+    border: 1px solid grey;
+}
+
+input.invalid {
+    border: 1px solid red;
+}
+
+
+/* auction view */
+
+table.auction {
+    width: 200px;
+
+}
+
+table td, table th {
+    width: 50px;
+    text-align: center;
+    border: 1px solid grey;
+}
+
+

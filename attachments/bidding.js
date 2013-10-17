@@ -1,4 +1,4 @@
-(function() {
+(function(window, Mustache) {
 
     function handlerFactory() {
         var self = this;
@@ -23,7 +23,6 @@
         this.value = new bidding.Auction();
     };
 
-
     bidding.InputWidget.prototype.handlerFactory = handlerFactory;
 
 
@@ -35,27 +34,44 @@
             this.target.addClass('invalid');
             return;
         }
-        if (this.value.elements != value.element) {
+        if (this.value.elements.toString() != value.elements.toString()) {
             this.value = value;
             this.target.val(value.toString());
             this.target.trigger('bidding.changed', value);
         }
     };
 
-    bidding.bidPattern = new RegExp('^([1-7][cdhs]|p|x|xx|[1-7]nt)', 'i');
+    bidding.nonDblPattern = new RegExp('^([1-7][cdhs]|p|x|[1-7]nt)', 'i');
+    bidding.dblPattern = new RegExp('^([1-7][cdhs]|p|xx|[1-7]nt)', 'i');
 
     bidding.parse = function(value) {
         var n = value.length;
         var output = new bidding.Auction();
         var match;
+        var doubled = false;
+        var pattern;
         while (value.length) {
             value = value.trimLeft();
-            match = value.match(bidding.bidPattern);
+            if (doubled) {
+                pattern = bidding.dblPattern;
+            } else {
+                pattern = bidding.nonDblPattern;
+            }
+            match = value.match(pattern);
             if (value != "" && !match) {
                 throw new bidding.ParseError(value);
             }
             output.elements.push(match[0]);
+            if (match[0] == 'p') {
+                //pass changes nothing
+            } else if (match[0] == 'x') {
+                doubled = true;
+            } else {
+                doubled = false;
+            }
+
             value = value.substr(match[0].length);
+            value = value.trimLeft();
         };
         return output;
     };
@@ -75,6 +91,35 @@
         this.toString = function(){return this.name + ": " + this.message}
     };
 
+    bidding.AuctionWidget = function(target, auction) {
+        this.target = target;
+        if (auction) {
+            this.draw(auction);
+        }
+    };
+
+    bidding.AuctionWidget.template = (
+        "<table class='auction'><thead>" +
+        "<th>N</th><th>E</th><th>S</th><th>W</th></thead>" +
+        "<tbody>{{#rows}}<tr>{{#.}}<td>{{.}}</td>{{/.}}</tr>{{/rows}}" +
+        "</tbody></table>");
+
+    bidding.AuctionWidget.prototype.draw = function(auction){
+        this.target.empty();
+        var rows = [];
+        var current;
+        for (x in auction.elements){
+            if (x % 4 == 0) {
+                current = [];
+                rows.push(current);
+            }
+            current.push(auction.elements[x]);
+        }
+        var html = Mustache.render(bidding.AuctionWidget.template,
+                                   {rows: rows});
+        this.target.html(html);
+    };
+
     window.bidding = bidding;
 
-})(window);
+})(window, Mustache);

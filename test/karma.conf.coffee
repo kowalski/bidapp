@@ -19,7 +19,13 @@ module.exports = (config) ->
       "bower_components/sinon/lib/sinon/mock.js"
       "bower_components/sinon/lib/sinon/assert.js"
 
+      "bower_components/mustache/mustache.js"
+      "bower_components/jquery-Mustache/jquery.mustache.js"
+      "bower_components/sammy/lib/sammy.js"
+
       "attachments/**.js"
+
+      "pattern": "templates/**.html", "included": false
 
       # "test/unit/helpers/**/*.coffee"
       # "test/unit/**/*_spec.coffee"
@@ -28,7 +34,6 @@ module.exports = (config) ->
 
     preprocessors:
       "**/*.coffee": ["coffee"]
-      "**/*.html": ["html2js"]
 
     ngHtml2JsPreprocessor:
       stripPrefix: "app/"
