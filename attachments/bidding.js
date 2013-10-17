@@ -17,21 +17,29 @@
 
     var bidding = {};
 
-    bidding.InputWidget = function(target) {
+    bidding.InputWidget = function(target, value) {
         this.target = target;
         this.target.keyup('bind', this.handlerFactory(this.keyupHandler));
-        this.value = new bidding.Auction();
+        this.value = value || new bidding.Auction();
+        this.target.val(this.value.toString());
     };
 
     bidding.InputWidget.prototype.handlerFactory = handlerFactory;
 
+    bidding.InputWidget.prototype.markInvalid = function() {
+        this.target.addClass('invalid');
+    };
+
+    bidding.InputWidget.prototype.markValid = function() {
+        this.target.removeClass('invalid');
+    };
 
     bidding.InputWidget.prototype.keyupHandler = function(ev) {
         try {
             var value = bidding.parse(this.target.val());
-            this.target.removeClass('invalid');
+            this.markValid();
         } catch (e) {
-            this.target.addClass('invalid');
+            this.markInvalid();
             return;
         }
         if (this.value.elements.toString() != value.elements.toString()) {
@@ -81,6 +89,12 @@
         this.elements = [];
     };
 
+    bidding.Auction.fromElements = function(elements) {
+        var res = new bidding.Auction();
+        res.elements = elements;
+        return res;
+    };
+
     bidding.Auction.prototype.toString = function() {
         return this.elements.join(" ");
     };
@@ -93,9 +107,7 @@
 
     bidding.AuctionWidget = function(target, auction) {
         this.target = target;
-        if (auction) {
-            this.draw(auction);
-        }
+        this.draw(auction);
     };
 
     bidding.AuctionWidget.template = (
@@ -108,12 +120,15 @@
         this.target.empty();
         var rows = [];
         var current;
-        for (x in auction.elements){
-            if (x % 4 == 0) {
-                current = [];
-                rows.push(current);
+
+        if (auction) {
+            for (x in auction.elements){
+                if (x % 4 == 0) {
+                    current = [];
+                    rows.push(current);
+                }
+                current.push(auction.elements[x]);
             }
-            current.push(auction.elements[x]);
         }
         var html = Mustache.render(bidding.AuctionWidget.template,
                                    {rows: rows});

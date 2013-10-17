@@ -21,6 +21,14 @@ input.invalid {
 
 /* auction view */
 
+div#auction {
+    padding: 5px;
+    display: block;
+    min-height: 80px;
+    border: 1px solid orange;
+    width: 200px;
+}
+
 table.auction {
     width: 200px;
 

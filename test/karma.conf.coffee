@@ -22,6 +22,7 @@ module.exports = (config) ->
       "bower_components/mustache/mustache.js"
       "bower_components/jquery-Mustache/jquery.mustache.js"
       "bower_components/sammy/lib/sammy.js"
+      "bower_components/jquery.couch/jquery.couch.js"
 
       "attachments/**.js"
 
