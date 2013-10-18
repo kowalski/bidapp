@@ -99,6 +99,25 @@
         return this.elements.join(" ");
     };
 
+    //FIXME: Figure out how not to duplicate it here and the view
+    bidding.Auction.dbKeyMapping = [
+        '1c', '1d', '1h', '1s', '1nt',
+        '2c', '2d', '2h', '2s', '2nt',
+        '3c', '3d', '3h', '3s', '3nt',
+        '4c', '4d', '4h', '4s', '4nt',
+        '5c', '5d', '5h', '5s', '5nt',
+        '6c', '6d', '6h', '6s', '6nt',
+        '7c', '7d', '7h', '7s', '7nt'];
+
+    bidding.Auction.prototype.toDbKey = function() {
+        var key = [];
+        for (i in this.elements) {
+            key.push(bidding.Auction.dbKeyMapping.indexOf(
+                this.elements[i].toLowerCase()));
+        }
+        return key;
+    };
+
     bidding.ParseError = function(parsed) {
         this.name = "ParseError";
         this.message = "Cannot parse: " + parsed;

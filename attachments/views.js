@@ -83,14 +83,34 @@
 
     views.BrowseBiddings.prototype._render = function(data, success, xhr){
         this.target.mustache('browse-bidding-template');
+
+        this.input = this.target.find('.bidding-input');
+        this.search = new bidding.InputWidget(this.input);
+
         var self = this;
-        bidapp.db.view('bidapp/biddings', {
+        this.input
+            .bind('bidding.changed', function(ev) {
+                self.redrawList(self.search.value); })
+            .trigger('bidding.changed');
+    };
+
+    views.BrowseBiddings.prototype.redrawList = function(auction) {
+        var self = this;
+        var params = {
+            limit: 50,
             success: function(resp) {
+                var target = self.target.find('.biddings');
+                target.empty();
                 for (i in resp.rows) {
-                    self.target.mustache('bidding-template', resp.rows[i]);
+                    target.mustache('bidding-template', resp.rows[i]);
                 }
             }
-        });
+        };
+        if (auction) {
+            params['startkey'] = auction.toDbKey();
+        }
+
+        bidapp.db.view('bidapp/biddings', params);
     };
 
 })(window, jQuery);
