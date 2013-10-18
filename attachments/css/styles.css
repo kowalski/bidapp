@@ -41,3 +41,21 @@ table td, table th {
 }
 
 
+/* browsing the stored biddings in main page */
+
+#browser {
+    border: 1px solid grey;
+    display: block;
+    width: 250px;
+    min-height: 100px;
+}
+
+
+#browser a.bidding{
+    display: block;
+
+}
+
+#browser a.bidding:nth-child(odd){
+    background: #eeeeee;
+}

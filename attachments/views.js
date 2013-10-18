@@ -72,4 +72,25 @@
     };
 
 
+    views.BrowseBiddings = function() {
+    };
+
+    views.BrowseBiddings.prototype.render = function(target) {
+        this.target = target;
+        $.Mustache.load('./templates/auction.html').done(
+            handlerFactory.call(this, this._render, target));
+    };
+
+    views.BrowseBiddings.prototype._render = function(data, success, xhr){
+        this.target.mustache('browse-bidding-template');
+        var self = this;
+        bidapp.db.view('bidapp/biddings', {
+            success: function(resp) {
+                for (i in resp.rows) {
+                    self.target.mustache('bidding-template', resp.rows[i]);
+                }
+            }
+        });
+    };
+
 })(window, jQuery);

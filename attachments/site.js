@@ -31,8 +31,10 @@ bidapp.index = function() {
     $.Mustache.load('./templates/index.html')
         .done(function() {
             $('#main-container').empty().mustache("index-template");
+            var browser = new views.BrowseBiddings();
+            browser.render($("#browser"));
         });
-}
+};
 
 
 $(function () {
