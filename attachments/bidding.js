@@ -127,7 +127,7 @@
                     current = [];
                     rows.push(current);
                 }
-                current.push(auction.elements[x]);
+                current.push(helpers.formatBidding(auction.elements[x]));
             }
         }
         var html = Mustache.render(bidding.AuctionWidget.template,
