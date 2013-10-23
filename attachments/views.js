@@ -22,10 +22,8 @@
         this.doc = handDoc || new docs.HandDoc();
     };
 
-    views.ShowBidding.prototype.saveHandler = function() {
-    };
-
     views.ShowBidding.prototype.render = function(target) {
+        this.target = target;
         $.Mustache.load('./templates/auction.html').done(
             handler.call(this, this._render, target));
     };
@@ -46,7 +44,15 @@
 
         target.find('button[name="save"]').bind(
             'click', handler.call(this, this.saveHandler));
+        target.find('#auction').addClass('db-change-listener')
+            .bind('db.changed', handler.call(this, this.dbChangedHandler));
+    };
 
+    views.ShowBidding.prototype.dbChangedHandler = function(ev, doc) {
+        if (doc && doc._id == this.doc._id) {
+            this.doc = new docs.HandDoc(doc);
+            this.render(this.target);
+        };
     };
 
     views.ShowBidding.prototype.saveHandler = function() {
@@ -59,16 +65,8 @@
         this.doc.auction = value;
 
         var self = this;
-        bidapp.db.saveDoc(this.doc, {
-            success: handler.call(this, this._savedCB)});
-
+        bidapp.db.saveDoc(this.doc);
     };
-
-    views.ShowBidding.prototype._savedCB = function(data) {
-        this.doc._id = data.id;
-        this.doc._rev = data.rev;
-    };
-
 
     views.BrowseBiddings = function() {
     };
