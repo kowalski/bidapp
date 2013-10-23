@@ -54,6 +54,8 @@ $(function () {
             this.get("#/", bidapp.index);
           });
 
-    bidapp.index();
-    bidapp.s.run();
+    $.Mustache.load('./templates.html')
+        .done(function() {
+            bidapp.index();
+            bidapp.s.run(); });
 });

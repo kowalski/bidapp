@@ -24,11 +24,6 @@
 
     views.ShowBidding.prototype.render = function(target) {
         this.target = target;
-        $.Mustache.load('./templates/auction.html').done(
-            handler.call(this, this._render, target));
-    };
-
-    views.ShowBidding.prototype._render = function(data, success, xhr, target){
         target.empty().mustache("auction-template");
 
         this.input = new bidding.InputWidget(
@@ -73,11 +68,6 @@
 
     views.BrowseBiddings.prototype.render = function(target) {
         this.target = target;
-        $.Mustache.load('./templates/auction.html').done(
-            handler.call(this, this._render, target));
-    };
-
-    views.BrowseBiddings.prototype._render = function(data, success, xhr){
         this.target.mustache('browse-bidding-template');
 
         this.input = this.target.find('.bidding-input');
