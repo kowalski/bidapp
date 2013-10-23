@@ -19,7 +19,7 @@ bidapp.showDocID = function() {
 
 bidapp.showBidding = function(handDoc) {
     var view = new views.ShowBidding(handDoc);
-    view.render($('#main-container'));
+    view.render($('#main-container #content'));
 };
 
 bidapp.newBid = function () {
@@ -38,13 +38,14 @@ bidapp.index = function() {
 
 
 $(function () {
-      bidapp.s = $.sammy(
-          function () {
-              // Index of all databases
-              this.get("#new", bidapp.newBid);
-              this.get("#show/:docID", bidapp.showDocID);
-              this.get('', bidapp.index);
-              this.get("#/", bidapp.index);
+    bidapp.s = $.sammy(
+        function () {
+            this.get("#new", bidapp.newBid);
+            this.get("#show/:docID", bidapp.showDocID);
+            this.get('', bidapp.index);
+            this.get("#/", bidapp.index);
           });
+
+    bidapp.index();
     bidapp.s.run();
 });

@@ -18,6 +18,25 @@ input.invalid {
     border: 1px solid red;
 }
 
+div.pane {
+    border: 1px solid grey;
+    padding: 5px;
+    float: left;
+    margin-right: 5px;
+    min-height: 135px;
+}
+
+div.clearfix {
+    clear: both;
+    height: 1px;
+    display: block;
+}
+
+/* content pane to the right */
+
+div#content {
+    width: 716px;
+}
 
 /* auction view */
 
@@ -29,12 +48,23 @@ div#auction {
     width: 200px;
 }
 
-table.auction {
-    width: 200px;
-
+div.auction {
+    width: 210px;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    margin-right: 5px;
+    float: left;
 }
 
-table td, table th {
+table.auction {
+    width: 200px;
+}
+
+div.auction input[type=text] {
+    width: 100%;
+}
+
+table.auction td, table.auction th {
     width: 50px;
     text-align: center;
     border: 1px solid grey;
@@ -44,11 +74,8 @@ table td, table th {
 /* browsing the stored biddings in main page */
 
 #browser {
-    border: 1px solid grey;
     display: block;
     width: 250px;
-    min-height: 100px;
-    padding: 5px;
 }
 
 #browser input[type=text],
