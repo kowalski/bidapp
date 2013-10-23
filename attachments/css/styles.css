@@ -48,14 +48,10 @@ table td, table th {
     display: block;
     width: 250px;
     min-height: 100px;
+    padding: 5px;
 }
 
-
-#browser a.bidding{
-    display: block;
-
-}
-
-#browser a.bidding:nth-child(odd){
-    background: #eeeeee;
+#browser input[type=text],
+#browser select {
+    width: 100%;
 }

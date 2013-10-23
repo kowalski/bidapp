@@ -1,6 +1,5 @@
 <script id="index-template" type="text/html">
   <h1>Welcome!</h1>
-  <a href="#new">Create new bidding</a>
   <div id="browser"></div>
 </script>
 
@@ -8,10 +7,14 @@
 <script id="browse-bidding-template" type="text/html">
   <label for="bidding-input">Search:</label>
   <input name="bidding-input" type="text" class="bidding-input" />
-  <div class="biddings"> </div>
+  <select multiple class="biddings"></select>
+  <div class="controls">
+    <button class="show-bidding">Show</button>
+    <button class="new-bidding">New</button>
+  </div>
 </script>
 
 
 <script id="bidding-template" type="text/html">
-  <a class="bidding" href="#show/{{id}}">{{value}}</a>
+  <option value="{{id}}">{{value}}</option>
 </script>

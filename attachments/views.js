@@ -1,6 +1,6 @@
 (function(window, $) {
 
-    function handlerFactory() {
+    function handler() {
         var self = this;
         var callback = arguments[0];
         var args = arguments;
@@ -22,14 +22,12 @@
         this.doc = handDoc || new docs.HandDoc();
     };
 
-    views.ShowBidding.prototype.handlerFactory = handlerFactory;
-
     views.ShowBidding.prototype.saveHandler = function() {
     };
 
     views.ShowBidding.prototype.render = function(target) {
         $.Mustache.load('./templates/auction.html').done(
-            this.handlerFactory(this._render, target));
+            handler.call(this, this._render, target));
     };
 
     views.ShowBidding.prototype._render = function(data, success, xhr, target){
@@ -47,7 +45,7 @@
             .trigger('bidding.changed');
 
         target.find('button[name="save"]').bind(
-            'click', this.handlerFactory(this.saveHandler));
+            'click', handler.call(this, this.saveHandler));
 
     };
 
@@ -62,7 +60,7 @@
 
         var self = this;
         bidapp.db.saveDoc(this.doc, {
-            success: this.handlerFactory(this._savedCB)});
+            success: handler.call(this, this._savedCB)});
 
     };
 
@@ -78,7 +76,7 @@
     views.BrowseBiddings.prototype.render = function(target) {
         this.target = target;
         $.Mustache.load('./templates/auction.html').done(
-            handlerFactory.call(this, this._render, target));
+            handler.call(this, this._render, target));
     };
 
     views.BrowseBiddings.prototype._render = function(data, success, xhr){
@@ -86,16 +84,50 @@
 
         this.input = this.target.find('.bidding-input');
         this.search = new bidding.InputWidget(this.input);
+        this.select = this.target.find('select');
+        this.showButton = this.target.find('button.show-bidding');
+        this.newButton = this.target.find('button.new-bidding');
 
         var self = this;
         this.input
-            .bind('bidding.changed', function(ev) {
-                self.redrawList(self.search.value); })
+            .bind('bidding.changed', handler.call(this, this.redrawList))
             .trigger('bidding.changed');
+
+        this.select.bind('change', handler.call(this, this.selectionChanged));
+        this.selectionChanged();
+
+        this.showButton.bind('click', handler.call(this, this.showClicked));
+        this.newButton.bind('click',
+                            function() {window.location.hash = 'new';});
     };
 
-    views.BrowseBiddings.prototype.redrawList = function(auction) {
+    views.BrowseBiddings.prototype.showClicked = function() {
+        var val = this.select.val();
+        if (val) {
+            window.location.hash = 'show/' + val;
+        }
+    };
+
+    views.BrowseBiddings.prototype.getSelectedBidding = function() {
+        var val = this.select.val();
+        if (val && val.length === 1) {
+            return val[0];
+        }
+    };
+
+    views.BrowseBiddings.prototype.selectionChanged = function() {
+        var val = this.getSelectedBidding();
+        if (!val) {
+            this.showButton.attr('disabled', 'disabled');
+        } else {
+            this.showButton.attr('disabled', null);
+        }
+    };
+
+    views.BrowseBiddings.prototype.redrawList = function() {
         var self = this;
+        var auction = this.search.value;
+
         var params = {
             limit: 50,
             success: function(resp) {
@@ -106,6 +138,7 @@
                 }
             }
         };
+
         if (auction) {
             params['startkey'] = auction.toDbKey();
         }
