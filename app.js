@@ -6,6 +6,10 @@ ddoc =
   { _id:'_design/bidapp'
   , rewrites :
     [ {from:"/", to:'index.html'}
+    , {from:"/api/comments/:hand_id",
+       to:'../../_design/bidapp/_view/comments',
+       query: {startkey: [":hand_id"], endkey: [":hand_id", {}],
+               include_docs: "true"}}
     , {from:"/api", to:'../../'}
     , {from:"/api/*", to:'../../*'}
     , {from:"/*", to:'*'}
