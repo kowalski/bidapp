@@ -151,6 +151,7 @@
 
         if (auction) {
             params['startkey'] = auction.toDbKey();
+            params['endkey'] = Array.prototype.concat(auction.toDbKey(), [{}]);
         }
 
         bidapp.db.view('bidapp/biddings', params);
