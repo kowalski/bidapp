@@ -28,8 +28,23 @@
     <input name="bidding-input" type="text" class="bidding-input" />
     <div class="controls">
       <button name="save" value="Save">Save</button>
+      <button name="comment" value="Comment">Add comment</button>
     </div>
   </div>
   <div class="comments-pane"></div>
   <div class="clearfix"></div>
 </script>
+
+<script id="comments-pane-template" type="text/html">
+  <div class="comments-history">
+  </div>
+</script>
+
+<script id="new-comment-template" type="text/html">
+  <div class="add-comment">
+    <textarea cols="30" rows="5" />
+    <button name="create">Comment</button>
+    <button name="close">Cancel</button>
+  </div>
+</script>
+

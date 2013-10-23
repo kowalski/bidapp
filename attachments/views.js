@@ -18,6 +18,10 @@
     views = {};
     window.views = views;
 
+    /*
+     * Widget showing individual auction
+     */
+
     views.ShowBidding = function(handDoc) {
         this.doc = handDoc || new docs.HandDoc();
     };
@@ -41,6 +45,24 @@
             'click', handler.call(this, this.saveHandler));
         target.find('#auction').addClass('db-change-listener')
             .bind('db.changed', handler.call(this, this.dbChangedHandler));
+
+
+        // Initialize the comments pane, but only if we don't have it yet
+        // and we have the document set
+        var newCommentButton = target.find('button[name="comment"]');
+        if (!this.comments && this.doc._id) {
+            this.comments = new views.CommentsPane(this.doc._id);
+            this.comments.render(this.target.find('.comments-pane'));
+            newCommentButton.bind('click',
+                                  handler.call(this.comments,
+                                               this.comments.newComment));
+        };
+
+        if (!this.comments) {
+            newCommentButton.attr('disabled', 'disabled');
+        } else {
+            newCommentButton.attr('disabled', null);
+        }
     };
 
     views.ShowBidding.prototype.dbChangedHandler = function(ev, doc) {
@@ -62,6 +84,11 @@
         var self = this;
         bidapp.db.saveDoc(this.doc);
     };
+
+    /*
+     * Widget showing the list of auctions in database with search field
+     * and controls.
+     */
 
     views.BrowseBiddings = function() {
     };
@@ -89,6 +116,7 @@
         this.showButton.bind('click', handler.call(this, this.showClicked));
         this.newButton.bind('click',
                             function() {window.location.hash = 'new';});
+
     };
 
     views.BrowseBiddings.prototype.dbChangedHandler = function(ev, doc) {
@@ -146,5 +174,51 @@
 
         bidapp.db.view('bidapp/biddings', params);
     };
+
+
+    /*
+     * Widget showing the list comments save for auction and allowing
+     * changing them.
+     */
+
+    views.CommentsPane = function(handID) {
+        this.handID = handID;
+    };
+
+    views.CommentsPane.prototype.render = function(target) {
+        this.target = target;
+        this.target
+            .empty()
+            .mustache('comments-pane-template');
+    };
+
+    views.CommentsPane.prototype.newComment = function(ev) {
+        if (this.target.find('.add-comment').length === 0) {
+            (new views.NewComment(this)).render();
+        }
+    };
+
+    /*
+     * New comment form.
+     */
+
+    views.NewComment = function(commentsPane) {
+        this.commentsPane = commentsPane;
+    };
+
+    views.NewComment.prototype.render = function () {
+        this.target = this.commentsPane.target
+            .find('.comments-history')
+            .mustache('new-comment-template')
+            .find('.add-comment');
+
+        this.target.find('button[name="close"]')
+            .bind('click', handler.call(this, this.close));
+    };
+
+    views.NewComment.prototype.close = function() {
+        this.target.remove();
+    };
+
 
 })(window, jQuery);
