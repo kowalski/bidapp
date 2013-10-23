@@ -36,11 +36,54 @@ ddoc.views['biddings'] = {
     }
 };
 
+ddoc.views['comments'] = {
+    'map': function(doc) {
+        if (doc.type == 'hand-comment') {
+            emit([doc.handID, doc.createdAt], null);
+        }
+    }
+};
+
+
 ddoc.validate_doc_update = function (newDoc, oldDoc, userCtx) {
-  if (newDoc._deleted === true && userCtx.roles.indexOf('_admin') === -1) {
-    throw "Only admin can delete documents on this database.";
-  }
-}
+    if (newDoc._deleted === true && userCtx.roles.indexOf('_admin') === -1) {
+        throw "Only admin can delete documents on this database.";
+    };
+
+    function require(field) {
+        if (!newDoc[field]) {
+            throw({'forbidden': 'Document must have ' + field + ' set'});
+        };
+    }
+
+    require('_id');
+
+    if (newDoc.type === 'hand-comment') {
+        require('handID');
+        require('body');
+    };
+};
+
+ddoc.updates = {};
+
+
+ddoc.updates.hand_comment = function(doc, req) {
+    var json = JSON.parse(req.body);
+    var epoch = Math.floor(new Date().getTime() / 1000);
+
+    if (!doc) {
+        doc = json;
+        doc._id = req.uuid;
+        doc.type = 'hand-comment';
+        doc.createdAt = epoch;
+        doc.createdBy = req.userCtx.name;
+    } else {
+        doc.body = json.body || doc.body;
+        doc.lastUpdatedAt = epoch;
+        doc.updatedBy = req.userCtx.name;
+    };
+    return [doc, {"json": "OK"}];
+};
 
 couchapp.loadAttachments(ddoc, path.join(__dirname, 'attachments'));
 

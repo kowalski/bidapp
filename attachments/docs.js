@@ -10,9 +10,19 @@ var HandDoc = function(opts) {
     }
 };
 
-var docs = {}
+
+var CommentDoc = function(opts) {
+    opts = opts || {};
+    for (key in opts) {
+        this[key] = opts[key];
+    }
+    this.type = 'hand-comment';
+};
+
+var docs = {};
 
 window.docs = docs;
 
 docs.HandDoc = HandDoc;
+docs.CommentDoc = CommentDoc;
 
