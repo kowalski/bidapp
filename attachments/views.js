@@ -95,10 +95,18 @@
 
         this.select.bind('change', handler.call(this, this.selectionChanged));
         this.selectionChanged();
+        this.select.addClass('db-change-listener')
+            .bind('db.changed', handler.call(this, this.dbChangedHandler));
 
         this.showButton.bind('click', handler.call(this, this.showClicked));
         this.newButton.bind('click',
                             function() {window.location.hash = 'new';});
+    };
+
+    views.BrowseBiddings.prototype.dbChangedHandler = function(ev, doc) {
+        if (doc && doc.type == "hand") {
+            this.redrawList();
+        }
     };
 
     views.BrowseBiddings.prototype.showClicked = function() {
@@ -127,6 +135,7 @@
     views.BrowseBiddings.prototype.redrawList = function() {
         var self = this;
         var auction = this.search.value;
+        var value = this.getSelectedBidding();
 
         var params = {
             limit: 50,
@@ -135,6 +144,9 @@
                 target.empty();
                 for (i in resp.rows) {
                     target.mustache('bidding-template', resp.rows[i]);
+                }
+                if (value) {
+                    target.val([value]);
                 }
             }
         };

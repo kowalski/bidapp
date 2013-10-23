@@ -36,8 +36,16 @@ bidapp.index = function() {
         });
 };
 
+bidapp.onDbChange = function(data) {
+    var doc = data.results[0].doc;
+    $('.db-change-listener').trigger('db.changed', doc);
+};
+
 
 $(function () {
+    var changes = bidapp.db.changes(null, {include_docs: true});
+    changes.onChange(bidapp.onDbChange);
+
     bidapp.s = $.sammy(
         function () {
             this.get("#new", bidapp.newBid);
