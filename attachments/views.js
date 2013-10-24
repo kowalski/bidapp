@@ -314,7 +314,11 @@
         this.target.find('button[name="create"]')
             .bind('click', handler.call(this, this.save));
 
-        this.target.find('textarea').focus();
+        var self = this;
+        this.target.find('textarea')
+            .bind('keyup', function(ev) {
+                if (ev.which == 27) {self.close();}})
+            .focus();
     };
 
     views.EditComment.prototype.save = function() {
