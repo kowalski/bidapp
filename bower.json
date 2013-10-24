@@ -6,7 +6,7 @@
     "sammy": "~0.7.4",
     "mustache": "~0.7.2",
     "jquery-Mustache": "~0.2.7",
-    "jquery.couch": "",
+    "jquery.couch": "git@github.com:kowalski/jquery.couch.git#update-handler",
     "jquery-timeago": ""
   },
   "devDependencies": {
