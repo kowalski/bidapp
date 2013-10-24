@@ -116,6 +116,7 @@ div.comment div.header{
     margin: 0px 2px;
     padding: 1px;
     border-bottom: 1px solid grey;
+    color: grey;
 }
 
 div.comment div.header div.header-controls {
@@ -124,7 +125,11 @@ div.comment div.header div.header-controls {
 
 div.comment div.header div.header-controls a {
     text-decoration: none;
-    color: grey;
+    color: black;
+}
+
+div.comment div.header .creation-info:not(:nth-last-of-type(1)):after {
+    content: ', ';
 }
 
 div.comment pre {

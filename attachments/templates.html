@@ -53,10 +53,20 @@
 <script id="comment-template" type="text/html">
   <div class="comment">
     <div class="header">
-      {{#timestamp}}{{doc.createdAt}}{{/timestamp}}
-      {{#doc.createdBy}}
-      by {{doc.createdBy}}
-      {{/doc.createdBy}}
+      <span class="creation-info">
+        created
+        {{#timestamp}}{{doc.createdAt}}{{/timestamp}}
+        {{#doc.createdBy}}by {{doc.createdBy}}{{/doc.createdBy}}
+      </span>
+      {{#doc.lastUpdatedAt}}
+      <span class="updated-info">
+        updated
+        {{#timestamp}}{{doc.lastUpdatedAt}}{{/timestamp}}
+        {{#doc.updatedBy}}
+        by {{doc.updatedBy}}
+        {{/doc.updatedBy}}
+      </span>
+      {{/doc.lastUpdatedAt}}
       <div class="header-controls">
         <a href="#" title="Edit" class="edit-comment">!</a>
         <a href="#" title="Remove" class="remove-comment">x</a>
