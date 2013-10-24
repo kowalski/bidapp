@@ -28,12 +28,9 @@ bidapp.newBid = function () {
 
 bidapp.index = function() {
     document.title = "Bid App";
-    $.Mustache.load('./templates/index.html')
-        .done(function() {
-            $('#main-container').empty().mustache("index-template");
-            var browser = new views.BrowseBiddings();
-            browser.render($("#browser"));
-        });
+    $('#main-container').empty().mustache("index-template");
+    var browser = new views.BrowseBiddings();
+    browser.render($("#browser"));
 };
 
 bidapp.onDbChange = function(data) {

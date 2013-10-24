@@ -6,7 +6,8 @@
     "sammy": "~0.7.4",
     "mustache": "~0.7.2",
     "jquery-Mustache": "~0.2.7",
-    "jquery.couch": ""
+    "jquery.couch": "",
+    "jquery-timeago": ""
   },
   "devDependencies": {
     "sinon": "~1.7.3"
