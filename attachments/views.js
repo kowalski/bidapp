@@ -184,6 +184,8 @@
                 if (value) {
                     target.val([value]);
                 }
+                target.find('option').bind(
+                    'dblclick', handler.call(self, self.showClicked));
             }
         };
 
