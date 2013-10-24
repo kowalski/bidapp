@@ -101,6 +101,7 @@
         this.search = new bidding.InputWidget(this.input);
         this.select = this.target.find('select');
         this.showButton = this.target.find('button.show-bidding');
+        this.deleteButton = this.target.find('button.delete-bidding');
         this.newButton = this.target.find('button.new-bidding');
 
         var self = this;
@@ -114,21 +115,33 @@
             .bind('db.changed', handler.call(this, this.dbChangedHandler));
 
         this.showButton.bind('click', handler.call(this, this.showClicked));
+        this.deleteButton.bind('click', handler.call(this, this.deleteClicked));
         this.newButton.bind('click',
                             function() {window.location.hash = 'new';});
 
     };
 
     views.BrowseBiddings.prototype.dbChangedHandler = function(ev, doc) {
+        if (doc && doc._deleted) {
+            this.select.find('option[value="' + doc._id + '"]').remove();
+        }
+
         if (doc && doc.type == "hand") {
             this.redrawList();
         }
     };
 
     views.BrowseBiddings.prototype.showClicked = function() {
-        var val = this.select.val();
+        var val = this.getSelectedBidding();
         if (val) {
             window.location.hash = 'show/' + val;
+        }
+    };
+
+    views.BrowseBiddings.prototype.deleteClicked = function() {
+        var val = this.getSelectedBidding();
+        if (val) {
+            bidapp.removeBidding(val);
         }
     };
 
@@ -143,8 +156,10 @@
         var val = this.getSelectedBidding();
         if (!val) {
             this.showButton.attr('disabled', 'disabled');
+            this.deleteButton.attr('disabled', 'disabled');
         } else {
             this.showButton.attr('disabled', null);
+            this.deleteButton.attr('disabled', null);
         }
     };
 

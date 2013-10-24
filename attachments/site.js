@@ -39,6 +39,27 @@ bidapp.onDbChange = function(data) {
 };
 
 
+bidapp.removeBidding = function(docId) {
+    bidapp.db.openDoc(docId,
+                      {success: function(doc) {bidapp.db.removeDoc(doc);}});
+
+    var params = {
+        startkey: [docId],
+        endkey: [docId, {}]
+    }
+    bidapp.db.view('bidapp/comments', {
+        include_docs: true,
+        startkey: [docId],
+        endkey: [docId, {}],
+        success: function(resp) {
+            for (var i in resp.rows) {
+                bidapp.db.removeDoc(resp.rows[i].doc);
+            }
+        }
+    });
+};
+
+
 $(function () {
     var changes = bidapp.db.changes(null, {include_docs: true});
     changes.onChange(bidapp.onDbChange);
