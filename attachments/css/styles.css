@@ -19,11 +19,17 @@ input.invalid {
 }
 
 div.pane {
-    border: 1px solid grey;
+    border-left: 1px solid grey;
+    border-right: 1px solid grey;
     padding: 5px;
     float: left;
-    margin-right: 5px;
-    min-height: 135px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: -1px;
+}
+
+div.pane:nth-of-type(1) {
+    border-left: none;
 }
 
 div.clearfix {
@@ -36,6 +42,7 @@ div.clearfix {
 
 div#content {
     width: 716px;
+    border-right: none;
 }
 
 /* auction view */
@@ -81,6 +88,10 @@ table.auction td, table.auction th {
 #browser input[type=text],
 #browser select {
     width: 100%;
+}
+
+#browser select {
+    height: 200px;
 }
 
 /* comments pane */
