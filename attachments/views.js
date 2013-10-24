@@ -252,7 +252,7 @@
     views.CommentsPane.prototype.renderComment = function(comment) {
         var context = {'doc': comment, 'timestamp': helpers.timestamp};
         var html = $($.Mustache.render('comment-template', context));
-
+        var selt = this;
         var existing = this.findRenderedComment(comment._id);
         if (existing) {
             existing.replaceWith(html);
@@ -265,6 +265,19 @@
         html.find('a.remove-comment')
             .bind('click', function() {
                 bidapp.db.removeDoc(comment);
+                return false;
+            });
+
+
+        html.find('a.edit-comment')
+            .bind('click', function() {
+                var old = html.find('pre');
+                old.remove();
+
+                var target = html.find('div.content');
+                var editor = new views.EditComment(this.handID, comment);
+                editor.render(target);
+                target.bind('comment.cancelled', function() {target.html(old)});
                 return false;
             });
     };
@@ -280,24 +293,21 @@
 
     views.CommentsPane.prototype.newComment = function(ev) {
         if (this.target.find('.add-comment').length === 0) {
-            (new views.NewComment(this)).render();
+            (new views.EditComment(this.handID)).render(
+                this.target.find('.comments-history'));
         }
     };
 
     /*
-     * New comment form.
+     * Edit comment widget form.
      */
 
-    views.NewComment = function(commentsPane) {
-        this.commentsPane = commentsPane;
+    views.EditComment = function(handID, comment) {
+        this.comment = comment || {handID: handID};
     };
 
-    views.NewComment.prototype.render = function () {
-        this.target = this.commentsPane.target
-            .find('.comments-history')
-            .mustache('new-comment-template')
-            .find('.add-comment');
-
+    views.EditComment.prototype.render = function(target) {
+        this.target = target.mustache('new-comment-template', this.comment);
         this.target.find('button[name="close"]')
             .bind('click', handler.call(this, this.close));
 
@@ -307,20 +317,24 @@
         this.target.find('textarea').focus();
     };
 
-    views.NewComment.prototype.save = function() {
+    views.EditComment.prototype.save = function() {
         var textarea = this.target.find('textarea');
         var val = textarea.val();
         if (!val) {
             textarea.addClass('invalid');
             return;
         }
-        var body = {handID: this.commentsPane.handID, body: val};
-        bidapp.db.update('bidapp', 'hand_comment', null, body,
+        this.comment.body = val;
+        bidapp.db.update('bidapp', 'hand_comment', this.comment._id,
+                         this.comment,
                          {success: handler.call(this, this.close)});
     };
 
-    views.NewComment.prototype.close = function() {
-        this.target.remove();
+    views.EditComment.prototype.close = function() {
+        this.target
+            .trigger('comment.cancelled')
+            .find('.add-comment')
+            .remove();
     };
 
 

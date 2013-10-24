@@ -42,7 +42,7 @@
 
 <script id="new-comment-template" type="text/html">
   <div class="add-comment">
-    <textarea cols="30" rows="5" />
+    <textarea cols="30" rows="5">{{body}}</textarea>
     <div class="controls">
       <button name="create">Comment</button>
       <button name="close">Cancel</button>
@@ -58,10 +58,13 @@
       by {{doc.createdBy}}
       {{/doc.createdBy}}
       <div class="header-controls">
-        <a href="#" class="remove-comment">x</a>
+        <a href="#" title="Edit" class="edit-comment">!</a>
+        <a href="#" title="Remove" class="remove-comment">x</a>
       </div>
     </div>
     <input type="hidden" value="{{doc._id}}" name="docId" />
-    <pre>{{doc.body}}</pre>
+    <div class="content">
+      <pre>{{doc.body}}</pre>
+    </div>
   </div>
 </script>
