@@ -102,9 +102,7 @@ div.comments-pane * {
 }
 
 div.comments-pane {
-    float: left;
-    min-width: 501px;
-    display: block;
+    overflow: hidden;
 }
 
 div.comment {
