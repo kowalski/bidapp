@@ -63,12 +63,17 @@
         } else {
             newCommentButton.attr('disabled', null);
         }
+
     };
 
     views.ShowBidding.prototype.dbChangedHandler = function(ev, doc) {
         if (doc && doc._id == this.doc._id) {
-            this.doc = new docs.HandDoc(doc);
-            this.render(this.target);
+            if (doc._deleted) {
+                window.location.hash = '';
+            } else {
+                this.doc = new docs.HandDoc(doc);
+                this.render(this.target);
+            }
         };
     };
 
