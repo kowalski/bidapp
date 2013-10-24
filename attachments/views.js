@@ -71,8 +71,12 @@
             if (doc._deleted) {
                 window.location.hash = '';
             } else {
-                this.doc = new docs.HandDoc(doc);
-                this.render(this.target);
+                if (window.location.hash == '#new') {
+                    window.location.hash = '#show/' + this.doc._id;
+                } else {
+                    this.doc = new docs.HandDoc(doc);
+                    this.render(this.target);
+                }
             }
         };
     };
