@@ -204,6 +204,13 @@
     };
 
     views.CommentsPane.prototype.dbChangedHandler = function(ev, doc) {
+        if (doc._deleted) {
+            var found = this.findRenderedComment(doc._id);
+            if (found) {
+                found.remove();
+            }
+        }
+
         if (doc && doc.type == "hand-comment" &&
             doc.handID == this.handID) {
             this.renderComment(doc);
@@ -220,16 +227,24 @@
         var context = {'doc': comment, 'timestamp': helpers.timestamp};
         var html = $($.Mustache.render('comment-template', context));
 
-        var existing = this.target.find(
-            '.comment input[name="docId"][value="' + comment._id + '"]');
-        if (existing.length) {
-            existing.closest('.comment').replaceWith(html);
+        var existing = this.findRenderedComment(comment._id);
+        if (existing) {
+            existing.replaceWith(html);
         } else {
             this.target.find('.comments-history').append(html);
         }
 
         html.find('span.timeago').timeago();
     };
+
+    views.CommentsPane.prototype.findRenderedComment = function(docId) {
+        var existing = this.target.find(
+            '.comment input[name="docId"][value="' + docId + '"]');
+        if (existing.length) {
+            return existing.closest('.comment');
+        }
+    };
+
 
     views.CommentsPane.prototype.newComment = function(ev) {
         if (this.target.find('.add-comment').length === 0) {
