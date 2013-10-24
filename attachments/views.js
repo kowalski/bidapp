@@ -190,6 +190,45 @@
         this.target
             .empty()
             .mustache('comments-pane-template');
+
+        this.target.addClass('db-change-listener')
+            .bind('db.changed', handler.call(this, this.dbChangedHandler));
+
+        var params = {
+            success: handler.call(this, this.renderComments),
+            include_docs: true,
+            startkey: [this.handID],
+            endkey: [this.handID, {}]
+        }
+        bidapp.db.view('bidapp/comments', params);
+    };
+
+    views.CommentsPane.prototype.dbChangedHandler = function(ev, doc) {
+        if (doc && doc.type == "hand-comment" &&
+            doc.handID == this.handID) {
+            this.renderComment(doc);
+        }
+    };
+
+    views.CommentsPane.prototype.renderComments = function(resp) {
+        for (i in resp.rows) {
+            this.renderComment(resp.rows[i].doc);
+        }
+    };
+
+    views.CommentsPane.prototype.renderComment = function(comment) {
+        var context = {'doc': comment, 'timestamp': helpers.timestamp};
+        var html = $($.Mustache.render('comment-template', context));
+
+        var existing = this.target.find(
+            '.comment input[name="docId"][value="' + comment._id + '"]');
+        if (existing.length) {
+            existing.closest('.comment').replaceWith(html);
+        } else {
+            this.target.find('.comments-history').append(html);
+        }
+
+        html.find('span.timeago').timeago();
     };
 
     views.CommentsPane.prototype.newComment = function(ev) {
@@ -214,6 +253,23 @@
 
         this.target.find('button[name="close"]')
             .bind('click', handler.call(this, this.close));
+
+        this.target.find('button[name="create"]')
+            .bind('click', handler.call(this, this.save));
+
+        this.target.find('textarea').focus();
+    };
+
+    views.NewComment.prototype.save = function() {
+        var textarea = this.target.find('textarea');
+        var val = textarea.val();
+        if (!val) {
+            textarea.addClass('invalid');
+            return;
+        }
+        var body = {handID: this.commentsPane.handID, body: val};
+        bidapp.db.update('bidapp', 'hand_comment', null, body,
+                         {success: handler.call(this, this.close)});
     };
 
     views.NewComment.prototype.close = function() {

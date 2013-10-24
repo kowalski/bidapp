@@ -82,3 +82,48 @@ table.auction td, table.auction th {
 #browser select {
     width: 100%;
 }
+
+/* comments pane */
+
+div.comments-pane,
+div.comments-pane * {
+    -moz-box-sizing: border-box;
+}
+
+div.comments-pane {
+    float: left;
+    min-width: 501px;
+    display: block;
+}
+
+div.comment {
+    border: 1px solid;
+    padding: 2px;
+    margin-bottom: 2px;
+}
+
+div.comment div.header{
+    font-size: 11px;
+    margin: 0px 2px;
+    padding: 1px;
+    border-bottom: 1px solid grey;
+}
+
+div.comment pre {
+    padding: 5px 2px;
+
+}
+
+
+/* add comment widget */
+
+div.add-comment {
+    border: 1px solid;
+    border-top: 2px solid;
+    margin-top: 3px;
+}
+
+div.add-comment textarea {
+    width: 100%;
+    display: block;
+}

@@ -18,4 +18,13 @@ helpers.formatBidding = function(input) {
 };
 
 
+helpers.timestamp = function() {
+    return function(epoch, render) {
+        var v = new Date(parseInt(render(epoch) * 1000));
+        return ('<span class="timeago" title="' + v.toISOString() + '">' +
+                v.toLocaleFormat() +
+                '</span>');
+    };
+};
+
 window.helpers = helpers;

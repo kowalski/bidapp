@@ -43,8 +43,22 @@
 <script id="new-comment-template" type="text/html">
   <div class="add-comment">
     <textarea cols="30" rows="5" />
-    <button name="create">Comment</button>
-    <button name="close">Cancel</button>
+    <div class="controls">
+      <button name="create">Comment</button>
+      <button name="close">Cancel</button>
+    </div>
   </div>
 </script>
 
+<script id="comment-template" type="text/html">
+  <div class="comment">
+    <div class="header">
+      {{#timestamp}}{{doc.createdAt}}{{/timestamp}}
+      {{#doc.createdBy}}
+      by {{doc.createdBy}}
+      {{/doc.createdBy}}
+    </div>
+    <input type="hidden" value="{{doc._id}}" name="docId" />
+    <pre>{{doc.body}}</pre>
+  </div>
+</script>
