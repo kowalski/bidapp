@@ -132,7 +132,7 @@
 
     views.BrowseBiddings.prototype.dbChangedHandler = function(ev, doc) {
         if (doc && doc._deleted) {
-            this.select.find('option[value="' + doc._id + '"]').remove();
+            this.select.find('option[value="' + doc._id + '"]').fadeOut();
         }
 
         if (doc && doc.type == "hand") {
@@ -233,7 +233,7 @@
         if (doc._deleted) {
             var found = this.findRenderedComment(doc._id);
             if (found) {
-                found.remove();
+                found.fadeOut();
             }
         }
 
@@ -261,6 +261,12 @@
         }
 
         html.find('span.timeago').timeago();
+
+        html.find('a.remove-comment')
+            .bind('click', function() {
+                bidapp.db.removeDoc(comment);
+                return false;
+            });
     };
 
     views.CommentsPane.prototype.findRenderedComment = function(docId) {

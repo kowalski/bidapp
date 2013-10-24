@@ -57,6 +57,9 @@
       {{#doc.createdBy}}
       by {{doc.createdBy}}
       {{/doc.createdBy}}
+      <div class="header-controls">
+        <a href="#" class="remove-comment">x</a>
+      </div>
     </div>
     <input type="hidden" value="{{doc._id}}" name="docId" />
     <pre>{{doc.body}}</pre>

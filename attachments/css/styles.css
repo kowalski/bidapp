@@ -118,11 +118,19 @@ div.comment div.header{
     border-bottom: 1px solid grey;
 }
 
+div.comment div.header div.header-controls {
+    float: right;
+}
+
+div.comment div.header div.header-controls a {
+    text-decoration: none;
+    color: grey;
+}
+
 div.comment pre {
     padding: 5px 2px;
 
 }
-
 
 /* add comment widget */
 
